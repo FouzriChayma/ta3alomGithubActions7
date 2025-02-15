@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification en Temps Réel</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fc;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #4a90e2;
+      margin-bottom: 20px;
+      text-align: center;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #notifications {
+      width: 80%;
+      max-width: 600px;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    p {
+      font-size: 1rem;
+      background-color: #e0f7fa;
+      color: #00796b;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+
+    p:hover {
+      background-color: #80deea;
+      transform: translateX(10px);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      #notifications {
+        width: 95%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Notifications des étudiants</h1>
+  <div id="notifications"></div>
+
+  <script>
+    const socket = io(); // Se connecter au serveur Socket.IO
+
+    // Écouter les notifications du serveur
+    socket.on('studentAdded', (data) => {
+      const notificationsDiv = document.getElementById('notifications');
+      const notification = document.createElement('p');
+      notification.textContent = data.message;
+      notificationsDiv.appendChild(notification);
+      
+      // Auto-scroll to the bottom when a new notification is added
+      notificationsDiv.scrollTop = notificationsDiv.scrollHeight;
+    });
+  </script>
+</body>
+</html>

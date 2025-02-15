@@ -28,7 +28,7 @@ jobs:
 
       - name: Deploy to Vercel
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}  # Your Vercel token from GitHub secrets
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}  # Add Vercel token here
         run: |
-          npm install -g vercel
-          vercel --prod --token $VERCEL_TOKEN
+          npm install -g vercel  # Install Vercel CLI
+          vercel --prod --token $VERCEL_TOKEN  # Deploy using the Vercel token

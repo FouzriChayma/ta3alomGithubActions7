@@ -2,29 +2,35 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.17.0]
+        node-version: [20.17.0]  # Use your required Node version
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - name: Run the application in the background
-      run: |
-        npm start & # Run the app in the background
-        sleep 10    # Give it some time to start
+      - uses: actions/checkout@v4  # Checkout code from your GitHub repository
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci  # Install dependencies
+
+      - run: npm run build --if-present  # If you have a build script, otherwise skip
+
+      - run: npm test  # Run tests (optional, depending on your setup)
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}  # Your Vercel token from GitHub secrets
+        run: |
+          npm install -g vercel
+          vercel --prod --token $VERCEL_TOKEN

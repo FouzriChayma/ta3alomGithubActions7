@@ -12,23 +12,23 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.17.0]  # Use your required Node version
+        node-version: [20.17.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v4  # Checkout code from your GitHub repository
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+    - uses: actions/checkout@v4
 
-      - run: npm ci  # Install dependencies
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-      - run: npm run build --if-present  # If you have a build script, otherwise skip
+    - run: npm ci
+    - run: npm run build --if-present
 
-      - name: Deploy to Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}  # Add Vercel token here
-        run: |
-          npm install -g vercel  # Install Vercel CLI
-          vercel --prod --token $VERCEL_TOKEN  # Deploy using the Vercel token
+    - name: Deploy to Vercel
+      env:
+        VERCEL_TOKEN: ${{ secrets.githubaction }}
+      run: |
+        vercel --token $VERCEL_TOKEN --prod
